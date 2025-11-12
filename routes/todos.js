@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 const Todo = require('../models/Todo');
 
-// ✅ Get all todos
+
 router.get('/', async (req, res) => {
   try {
     const todos = await Todo.find().sort({ createdAt: -1 });
@@ -12,7 +12,7 @@ router.get('/', async (req, res) => {
   }
 });
 
-// ✅ Add a new todo
+
 router.post('/', async (req, res) => {
   try {
     const { title } = req.body;
@@ -24,7 +24,7 @@ router.post('/', async (req, res) => {
   }
 });
 
-// ✅ Toggle completion (mark done/undone)
+
 router.patch('/:id', async (req, res) => {
   try {
     const todo = await Todo.findById(req.params.id);
@@ -40,14 +40,14 @@ router.patch('/:id', async (req, res) => {
   }
 });
 
-// ✅ Edit/Update todo title
+
 router.put('/:id', async (req, res) => {
   try {
     const { title } = req.body;
     const updatedTodo = await Todo.findByIdAndUpdate(
       req.params.id,
       { title },
-      { new: true } // return the updated document
+      { new: true }
     );
 
     if (!updatedTodo) return res.status(404).json({ message: 'Not found' });
@@ -58,7 +58,6 @@ router.put('/:id', async (req, res) => {
   }
 });
 
-// ✅ Delete a todo
 router.delete('/:id', async (req, res) => {
   try {
     const removed = await Todo.findByIdAndDelete(req.params.id);
