@@ -3,7 +3,7 @@ const express = require("express");
 module.exports = (pool) => {
   const router = express.Router();
 
-  // GET all todos
+
   router.get("/", async (req, res) => {
     try {
       const result = await pool.query(
@@ -15,7 +15,6 @@ module.exports = (pool) => {
     }
   });
 
-  // POST create todo
   router.post("/", async (req, res) => {
     try {
       const { title } = req.body;
@@ -30,13 +29,9 @@ module.exports = (pool) => {
       res.status(400).json({ message: err.message });
     }
   });
-
-  // PATCH: toggle or update completed
   router.patch("/:id", async (req, res) => {
     try {
       const id = req.params.id;
-
-      // Fetch existing todo
       const oldTodo = await pool.query(
         "SELECT completed FROM todos WHERE id = $1",
         [id]
@@ -60,7 +55,7 @@ module.exports = (pool) => {
     }
   });
 
-  // PUT update title
+  
   router.put("/:id", async (req, res) => {
     try {
       const { title } = req.body;
@@ -78,7 +73,7 @@ module.exports = (pool) => {
     }
   });
 
-  // DELETE todo
+  
   router.delete("/:id", async (req, res) => {
     try {
       const result = await pool.query(
