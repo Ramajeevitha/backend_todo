@@ -1,8 +1,9 @@
 const express = require('express');
-const mongoose = require('mongoose');
 const cors = require('cors');
 require('dotenv').config();
+const { Pool } = require('pg');
 
+// Routes
 const todosRoute = require('./routes/todos');
 
 const app = express();
@@ -11,14 +12,17 @@ app.use(express.json());
 
 const PORT = process.env.PORT || 5000;
 
-app.use('/api/todos', todosRoute);
+// PostgreSQL connection
+const pool = new Pool({
+  connectionString: process.env.DATABASE_URL,
+});
 
-mongoose
-  .connect(process.env.MONGO_URI, { useNewUrlParser: true, useUnifiedTopology: true })
-  .then(() => {
-    console.log('Connected to MongoDB');
-    app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
-  })
-  .catch(err => {
-    console.error('DB connection error:', err.message);
-  });
+// Test DB connection
+pool.connect()
+  .then(() => console.log("Connected to PostgreSQL"))
+  .catch(err => console.error("DB connection error:", err.message));
+
+// Pass `pool` to routes
+app.use('/api/todos', todosRoute(pool));
+
+app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
